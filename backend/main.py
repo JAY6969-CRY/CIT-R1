@@ -64,21 +64,21 @@ def parse_whatsapp_chat(raw_text: str) -> list[dict]:
     """
     messages = []
     patterns = [
-        # Format B: [DD/MM/YY, HH:MM:SS AM/PM] Sender: Message
+        # Format B & New Format: [DD/MM/YY, HH:MM:SS AM/PM] or [MM/DD, HH:MM AM/PM] Sender: Message
         re.compile(
-            r"\[(\d{1,2}/\d{1,2}/\d{2,4},\s*\d{1,2}:\d{2}(?::\d{2})?\s*[APap][Mm])\]\s*([^:]+):\s*(.*)"
+            r"\[(\d{1,2}/\d{1,2}(?:/\d{2,4})?,\s*\d{1,2}:\d{2}(?::\d{2})?\s*[APap][Mm])\]\s*([^:]+):\s*(.*)"
         ),
-        # Format D: [DD/MM/YY, HH:MM:SS] Sender: Message (24h)
+        # Format D & New Format: [DD/MM/YY, HH:MM:SS] or [MM/DD, HH:MM] Sender: Message (24h)
         re.compile(
-            r"\[(\d{1,2}/\d{1,2}/\d{2,4},\s*\d{1,2}:\d{2}(?::\d{2})?)\]\s*([^:]+):\s*(.*)"
+            r"\[(\d{1,2}/\d{1,2}(?:/\d{2,4})?,\s*\d{1,2}:\d{2}(?::\d{2})?)\]\s*([^:]+):\s*(.*)"
         ),
-        # Format A: DD/MM/YY, HH:MM AM/PM - Sender: Message
+        # Format A: DD/MM/YY, HH:MM AM/PM - Sender: Message (or without year)
         re.compile(
-            r"(\d{1,2}/\d{1,2}/\d{2,4},\s*\d{1,2}:\d{2}(?::\d{2})?\s*[APap][Mm])\s*-\s*([^:]+):\s*(.*)"
+            r"(\d{1,2}/\d{1,2}(?:/\d{2,4})?,\s*\d{1,2}:\d{2}(?::\d{2})?\s*[APap][Mm])\s*-\s*([^:]+):\s*(.*)"
         ),
-        # Format C: DD/MM/YY, HH:MM - Sender: Message (24h)
+        # Format C: DD/MM/YY, HH:MM - Sender: Message (24h or without year)
         re.compile(
-            r"(\d{1,2}/\d{1,2}/\d{2,4},\s*\d{1,2}:\d{2}(?::\d{2})?)\s*-\s*([^:]+):\s*(.*)"
+            r"(\d{1,2}/\d{1,2}(?:/\d{2,4})?,\s*\d{1,2}:\d{2}(?::\d{2})?)\s*-\s*([^:]+):\s*(.*)"
         ),
     ]
     for line in raw_text.strip().split("\n"):
